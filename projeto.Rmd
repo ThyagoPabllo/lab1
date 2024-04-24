@@ -1,0 +1,56 @@
+> setwd("~/Documentos/Lab 1")
+> library(readr)
+> library(dplyr)
+
+> Universidades <- read.csv('cursos_prouni.csv')
+> Universidades_estados <- read.csv('estados.csv')
+
+
+#Diferença entre mensalidades 
+
+> CursosComputaçãoNE <- cursos-prouni %>% filter(curso_busca == 'Ciência da computação' & uf_busca == 'NE')
+> CursosComputaçãoSE <- Cursos-prouni %>% filter(curso_busca == 'Ciência da Computação' & uf_busca == 'SE')
+
+> mediaNE <- mean(CursosComputaçãoNE$mensalidade)
+> medianaNE <- median(CursosComputaçãoNE$mensalidade)
+
+> mediaSE <- mean(CursosComputaçãoSE$mensalidade)
+> medianaSE <- median(CursosComputaçãoSE$mensalidade)
+
+> diferençaMediaNeSe <- mediaNE - mediaSE
+> diferençaMedianaNeSe <- medianaNE - medianaSE
+
+#Top 10 bolsas
+
+> Bolsas <- cursos-prouni %>% mutate(total_bolsas = bolsa_integral + bolsa_integral_ampla + bolsa_parcial_cotas + bolsa_parcial_ampla) %>% group_by(nome) %>% summarise(total_bolsas = sum(total_bolsas))
+
+> Cursos10 <- cursos_bolsas %>% arrange(desc(total_bolsas)) %>% head(10)
+
+#Cursos de tecnologia da Paraíba que oferecem mais bolsas
+
+> cursos_tecnológicos <- filter(curso_busca == 'tecnologia' & 'elétrica' & 'computação')
+
+> Cursos_Tecnológicos_PB <- cursos_prouni %>% 
+filter(uf_busca == 'PB' & grepl(cursos_tecnologia, curso_busca))
+
+> Bolsas_Curso <- Cursos_Tecnológicos_PB %>% 
+mutate(total_bolsas =bolsa_integral + bolsa_integral_integral_ampla + bolsa_parcial_cotas + bolsa_ parcial_ampla) %>% group_by(nome) %>% 
+summarise(bolsa_integral = sum(bolsa_integral),
+bolsa_integral_ampla = sum(bolsa_integral_ampla),
+bolsa_parcial_cotas = sum(bolsa_parcial_cotas),
+bolsa_parcial_ampla = sum(bolsa_parcial_ampla),
+total_bolsa = sum(total_bolsas))
+
+#Percentual de bolsas para os cursos de Computação e Sistemas de informação
+
+> cursos_Computação_Si <- cursos-prouni %>%
+filter(cursi_busca %in% c('Ciência da Computação', 'Sistemas de informação'))
+
+>total_bolsas <- cursos_Computação_Si <- cursos-prouni %<%
+group_by(curso_busca, turno) %>%
+summarise(total_bolsas = sumbolsa_integral + bolsa_integral_ampla + bolsa_parcial_cotas + bolsa_parcial_ampla))
+
+> percentual <- total_bolsas %>%
+group_by(curso_busca)%>%
+mutate(percentual = total_bolsas / sum(total_bolsas) * 100)
+
