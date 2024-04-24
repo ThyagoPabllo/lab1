@@ -1,24 +1,34 @@
 > setwd("~/Documentos/Lab 1")
 > library(readr)
-> library(dplyr)
+> library('dplyr')
 
-> Universidades <- read.csv('cursos_prouni.csv')
+> Universidades <- read.csv('cursos-prouni.csv')
 > Universidades_estados <- read.csv('estados.csv')
 
 
 #Diferença entre mensalidades 
 
-> CursosComputaçãoNE <- cursos-prouni %>% filter(curso_busca == 'Ciência da computação' & uf_busca == 'NE')
-> CursosComputaçãoSE <- Cursos-prouni %>% filter(curso_busca == 'Ciência da Computação' & uf_busca == 'SE')
+> mediaNE <- read_csv('cursos-prouni.csv') %>% group_by(curso_busca == 'Ciência da computação' & uf_busca == 'PB' & uf_busca == 'CE' & uf_busca == 'PE' & uf_busca == 'PI' & uf_busca == 'MA' & uf_busca == 'SE' & uf_busca == 'AL' & uf_busca == 'RN')%>% summarise(media = mean(mensalidade, na.rm=TRUE))
 
-> mediaNE <- mean(CursosComputaçãoNE$mensalidade)
-> medianaNE <- median(CursosComputaçãoNE$mensalidade)
+> View(mediaNE)
 
-> mediaSE <- mean(CursosComputaçãoSE$mensalidade)
-> medianaSE <- median(CursosComputaçãoSE$mensalidade)
+> mediaSE <- read_csv('cursos-prouni.csv') %>% group_by(curso_busca == 'Ciência da Computação' & uf_busca == 'SP' & uf_busca == 'ES' & uf_busca == 'MG' & uf_busca == 'RJ') %>% summarise(media = mean(mensalidade, na.rm=TRUE))
+
+> View(mediaSE)
+
+> medianaNE <- read_csv('cursos-prouni.csv') %>% group_by(curso_busca == 'Ciência da computação' & uf_busca == 'PB' & uf_busca == 'CE' & uf_busca == 'PE' & uf_busca == 'PI' & uf_busca == 'MA' & uf_busca == 'SE' & uf_busca == 'AL' & uf_busca == 'RN')%>% summarise(mediana = median(mensalidade, na.rm=TRUE))
+
+> View(medianaNE)
+
+> medianaSE <- read_csv('cursos-prouni.csv') %>% group_by(curso_busca == 'Ciência da Computação' & uf_busca == 'SP' & uf_busca == 'ES' & uf_busca == 'MG' & uf_busca == 'RJ') %>% summarise(mediana = median(mensalidade, na.rm=TRUE))
+
+> View(mediaSE)
 
 > diferençaMediaNeSe <- mediaNE - mediaSE
 > diferençaMedianaNeSe <- medianaNE - medianaSE
+
+> View(diferençaMediaNeSe)
+> View(diferençaMedianaNeSe)
 
 #Top 10 bolsas
 
@@ -30,21 +40,23 @@
 
 > cursos_tecnológicos <- filter(curso_busca == 'tecnologia' & 'elétrica' & 'computação')
 
-> Cursos_Tecnológicos_PB <- cursos_prouni %>% 
+> Cursos_Tecnológicos <- read_csv('cursos_prouni.csv') %>% 
 filter(uf_busca == 'PB' & grepl(cursos_tecnologia, curso_busca))
 
-> Bolsas_Curso <- Cursos_Tecnológicos_PB %>% 
-mutate(total_bolsas =bolsa_integral + bolsa_integral_integral_ampla + bolsa_parcial_cotas + bolsa_ parcial_ampla) %>% group_by(nome) %>% 
+> Bolsas_Curso <- Cursos_Tecnológicos %>% 
+mutate(total_bolsas = bolsa_integral + bolsa_integral_ampla + bolsa_parcial_cotas + bolsa_ parcial_ampla) %>% group_by(nome) %>% 
 summarise(bolsa_integral = sum(bolsa_integral),
 bolsa_integral_ampla = sum(bolsa_integral_ampla),
 bolsa_parcial_cotas = sum(bolsa_parcial_cotas),
 bolsa_parcial_ampla = sum(bolsa_parcial_ampla),
 total_bolsa = sum(total_bolsas))
 
+> View(total_bolsa)
+
 #Percentual de bolsas para os cursos de Computação e Sistemas de informação
 
-> cursos_Computação_Si <- cursos-prouni %>%
-filter(cursi_busca %in% c('Ciência da Computação', 'Sistemas de informação'))
+> cursos_Computação_Si <- read_csv('cursos-prouni.csv') %>%
+filter(curso_busca == 'Ciência da Computação' | 'Sistemas de informação' | 'Engenharia da computação'))
 
 >total_bolsas <- cursos_Computação_Si <- cursos-prouni %<%
 group_by(curso_busca, turno) %>%
